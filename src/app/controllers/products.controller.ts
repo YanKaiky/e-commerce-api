@@ -1,16 +1,16 @@
 import { Request, Response } from 'express';
-import UsersService from '../services/products.service';
+import ProductsService from '../services/products.service';
 
-class UsersController {
+class ProductsController {
   async create(request: Request, response: Response) {
     try {
       const payload = {
         name: request.body.name,
       };
 
-      const user = await UsersService.create(payload);
+      const product = await ProductsService.create(payload);
 
-      response.status(201).json(user);
+      response.status(201).json(product);
     } catch (error: any) {
       response.json({ message: error.message });
     }
@@ -18,9 +18,9 @@ class UsersController {
 
   async getAll(_: Request, response: Response) {
     try {
-      const users = await UsersService.getAll();
+      const products = await ProductsService.getAll();
 
-      response.status(200).json(users);
+      response.status(200).json(products);
     } catch (error: any) {
       response.json({ message: error.message });
     }
@@ -30,9 +30,9 @@ class UsersController {
     try {
       const id = request.params.id;
 
-      const user = await UsersService.getById(id);
+      const product = await ProductsService.getById(id);
 
-      response.status(200).json(user);
+      response.status(200).json(product);
     } catch (error: any) {
       response.json({ message: error.message });
     }
@@ -46,9 +46,9 @@ class UsersController {
         name: request.body.name,
       };
 
-      const user = await UsersService.update(id, payload);
+      const product = await ProductsService.update(id, payload);
 
-      response.status(200).json(user);
+      response.status(200).json(product);
     } catch (error: any) {
       response.json({ message: error.message });
     }
@@ -58,13 +58,13 @@ class UsersController {
     try {
       const id = request.params.id;
 
-      const user = await UsersService.delete(id);
+      const product = await ProductsService.delete(id);
 
-      response.status(200).json(user);
+      response.status(200).json(product);
     } catch (error: any) {
       response.json({ message: error.message });
     }
   }
 }
 
-export default new UsersController();
+export default new ProductsController();

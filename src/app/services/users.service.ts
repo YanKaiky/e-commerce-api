@@ -17,7 +17,7 @@ class UsersService {
   };
 
   getAll = async () => {
-    const users = await Users.find().sort({ new: -1, timestamp: -1 });;
+    const users = await Users.find().sort({ new: -1, timestamp: -1 });
 
     return users;
   };
