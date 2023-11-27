@@ -6,6 +6,11 @@ class ProductsController {
     try {
       const payload = {
         name: request.body.name,
+        price: request.body.price,
+        supplier: request.body.supplier,
+        image_url: request.body.image_url,
+        description: request.body.description,
+        product_location: request.body.product_location,
       };
 
       const product = await ProductsService.create(payload);
@@ -44,6 +49,10 @@ class ProductsController {
 
       const payload = {
         name: request.body.name,
+        supplier: request.body.supplier,
+        image_url: request.body.image_url,
+        description: request.body.description,
+        product_location: request.body.product_location,
       };
 
       const product = await ProductsService.update(id, payload);

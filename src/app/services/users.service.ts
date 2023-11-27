@@ -11,7 +11,7 @@ interface IUpdateDataUser {
 
 class UsersService {
   create = async (data: ICreateDataUser) => {
-    const user = Users.create({ name: data.name });
+    const user = Users.create(data);
 
     return user;
   };

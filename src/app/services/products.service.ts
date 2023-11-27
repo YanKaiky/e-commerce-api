@@ -3,15 +3,25 @@ import Products from '../models/products';
 
 interface ICreateDataProduct {
   name: string;
+  price: string;
+  supplier: string;
+  image_url: string;
+  description: string;
+  product_location: string;
 }
 
 interface IUpdateDataProduct {
-  name: string;
+  name?: string;
+  price?: string;
+  supplier?: string;
+  image_url?: string;
+  description?: string;
+  product_location?: string;
 }
 
 class ProductsService {
   create = async (data: ICreateDataProduct) => {
-    const product = Products.create({ name: data.name });
+    const product = Products.create(data);
 
     return product;
   };
@@ -36,6 +46,11 @@ class ProductsService {
     if (!product) throw createHttpError.NotFound('USER_NOT_FOUND');
 
     product.name = data.name ?? product.name;
+    product.price = data.price ?? product.price;
+    product.supplier = data.supplier ?? product.supplier;
+    product.image_url = data.image_url ?? product.image_url;
+    product.description = data.description ?? product.description;
+    product.product_location = data.product_location ?? product.product_location;
 
     product.save();
 
