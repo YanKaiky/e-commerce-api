@@ -3,7 +3,7 @@ import Products from '../models/products';
 
 interface ICreateDataProduct {
   name: string;
-  price: string;
+  price: number;
   supplier: string;
   image_url: string;
   description: string;
@@ -12,7 +12,7 @@ interface ICreateDataProduct {
 
 interface IUpdateDataProduct {
   name?: string;
-  price?: string;
+  price?: number;
   supplier?: string;
   image_url?: string;
   description?: string;
