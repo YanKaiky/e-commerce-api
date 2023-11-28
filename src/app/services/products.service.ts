@@ -27,7 +27,7 @@ class ProductsService {
   };
 
   getAll = async () => {
-    const products = await Products.find().sort({ new: -1, timestamp: -1 });
+    const products = await Products.find().sort({ createdAt: -1 });
 
     return products;
   };
