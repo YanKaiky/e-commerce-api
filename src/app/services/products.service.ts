@@ -41,7 +41,17 @@ class ProductsService {
             description: {
               $regex: new RegExp(search, 'i')
             },
-          }
+          },
+          {
+            product_location: {
+              $regex: new RegExp(search, 'i')
+            },
+          },
+          {
+            supplier: {
+              $regex: new RegExp(search, 'i')
+            },
+          },
         ]
       }).sort({ createdAt: -1 });
     } else {
