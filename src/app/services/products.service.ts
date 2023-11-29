@@ -26,8 +26,27 @@ class ProductsService {
     return product;
   };
 
-  getAll = async () => {
-    const products = await Products.find().sort({ createdAt: -1 });
+  getAll = async (search?: string) => {
+    let products = []
+
+    if (search) {
+      products = await Products.find({
+        $or: [
+          {
+            name: {
+              $regex: new RegExp(search, 'i')
+            },
+          },
+          {
+            description: {
+              $regex: new RegExp(search, 'i')
+            },
+          }
+        ]
+      }).sort({ createdAt: -1 });
+    } else {
+      products = await Products.find().sort({ createdAt: -1 });
+    }
 
     return products;
   };

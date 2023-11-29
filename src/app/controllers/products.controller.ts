@@ -21,9 +21,11 @@ class ProductsController {
     }
   }
 
-  async getAll(_: Request, response: Response) {
+  async getAll(request: Request, response: Response) {
     try {
-      const products = await ProductsService.getAll();
+      const search = request.query.search as string;
+      
+      const products = await ProductsService.getAll(search);
 
       response.status(200).json(products);
     } catch (error: any) {
