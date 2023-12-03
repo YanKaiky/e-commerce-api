@@ -6,6 +6,10 @@ class UsersController {
     try {
       const payload = {
         name: request.body.name,
+        username: request.body.username,
+        email: request.body.email,
+        password: request.body.password,
+        location: request.body.location,
       };
 
       const user = await UsersService.create(payload);
@@ -44,6 +48,10 @@ class UsersController {
 
       const payload = {
         name: request.body.name,
+        username: request.body.username,
+        email: request.body.email,
+        password: request.body.password,
+        location: request.body.location,
       };
 
       const user = await UsersService.update(id, payload);

@@ -21,7 +21,7 @@ interface IUpdateDataProduct {
 
 class ProductsService {
   create = async (data: ICreateDataProduct) => {
-    const product = Products.create(data);
+    const product = await Products.create(data);
 
     return product;
   };

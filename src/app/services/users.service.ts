@@ -1,17 +1,29 @@
 import createHttpError from 'http-errors';
 import Users from '../models/users';
+import * as bcrypt from 'bcryptjs';
+import 'dotenv/config';
 
 interface ICreateDataUser {
   name: string;
+  username: string;
+  email: string;
+  password: string;
+  location: string;
 }
 
 interface IUpdateDataUser {
-  name: string;
+  name?: string;
+  username?: string;
+  email?: string;
+  password?: string;
+  location?: string;
 }
 
 class UsersService {
   create = async (data: ICreateDataUser) => {
-    const user = Users.create(data);
+    data.password = bcrypt.hashSync(data.password, 12);
+
+    const user = await Users.create(data);
 
     return user;
   };
@@ -36,6 +48,10 @@ class UsersService {
     if (!user) throw createHttpError.NotFound('USER_NOT_FOUND');
 
     user.name = data.name ?? user.name;
+    user.username = data.username ?? user.username;
+    user.email = data.email ?? user.email;
+    user.password = data.password ?? user.password;
+    user.location = data.location ?? user.location;
 
     user.save();
 
