@@ -50,7 +50,7 @@ class UsersService {
     user.name = data.name ?? user.name;
     user.username = data.username ?? user.username;
     user.email = data.email ?? user.email;
-    user.password = data.password ?? user.password;
+    user.password = data.password ? bcrypt.hashSync(data.password, 12) : user.password;
     user.location = data.location ?? user.location;
 
     user.save();
