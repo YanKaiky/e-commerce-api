@@ -18,9 +18,11 @@ class CartController {
     }
   }
 
-  async getAll(_: Request, response: Response) {
+  async getAll(request: Request, response: Response) {
     try {
-      const cart = await CartService.getAll();
+      const user_id = request.query.user_id as string;
+
+      const cart = await CartService.getAll(user_id);
 
       response.status(200).json(cart);
     } catch (error: any) {
@@ -28,37 +30,34 @@ class CartController {
     }
   }
 
-  // async getById(request: Request, response: Response) {
-  //   try {
-  //     const id = request.params.id;
+  async getById(request: Request, response: Response) {
+    try {
+      const id = request.params.id;
 
-  //     const cart = await CartService.getById(id);
+      const cart = await CartService.getById(id);
 
-  //     response.status(200).json(cart);
-  //   } catch (error: any) {
-  //     response.json({ message: error.message });
-  //   }
-  // }
+      response.status(200).json(cart);
+    } catch (error: any) {
+      response.json({ message: error.message });
+    }
+  }
 
-  // async update(request: Request, response: Response) {
-  //   try {
-  //     const id = request.params.id;
+  async update(request: Request, response: Response) {
+    try {
+      const id = request.params.id;
 
-  //     const payload = {
-  //       name: request.body.name,
-  //       cartname: request.body.cartname,
-  //       email: request.body.email,
-  //       password: request.body.password,
-  //       location: request.body.location,
-  //     };
+      const payload = {
+        user_id: request.body.user_id,
+        product_id: request.body.product_id,
+      };
 
-  //     const cart = await CartService.update(id, payload);
+      const cart = await CartService.update(id, payload);
 
-  //     response.status(200).json(cart);
-  //   } catch (error: any) {
-  //     response.json({ message: error.message });
-  //   }
-  // }
+      response.status(200).json(cart);
+    } catch (error: any) {
+      response.json({ message: error.message });
+    }
+  }
 
   // async delete(request: Request, response: Response) {
   //   try {

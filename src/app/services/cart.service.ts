@@ -13,7 +13,6 @@ interface ICreateDataUser {
 interface IUpdateDataUser {
   user_id?: string;
   product_id?: string;
-  quantity?: number;
 }
 
 class CartService {
@@ -47,45 +46,51 @@ class CartService {
     }
   };
 
-  getAll = async () => {
-    const cart = await Cart.find().sort({ new: -1, timestamp: -1 });
+  getAll = async (user_id?: string) => {
+    let cart = [];
+
+    if (user_id) {
+      cart = await Cart.find({ user_id }).populate('products.product_id', '_id title supplier image__url').sort({ new: -1, timestamp: -1 });
+    } else {
+      cart = await Cart.find().sort({ new: -1, timestamp: -1 });
+    }
 
     return cart;
   };
 
-  // getById = async (_id: string) => {
-  //   const cart = await Cart.findById(_id);
+  getById = async (_id: string) => {
+    const cart = await Cart.findById(_id).populate('products.product_id', '_id title supplier image__url');
 
-  //   if (!cart) throw createHttpError.NotFound('USER_NOT_FOUND');
+    if (!cart) throw createHttpError.NotFound('CART_NOT_FOUND');
 
-  //   return cart;
-  // };
+    return cart;
+  };
 
-  // update = async (_id: string, data: IUpdateDataUser) => {
-  //   const cart = await Cart.findById(_id);
+  update = async (user_id: string, data: IUpdateDataUser) => {
+    const cart = await Cart.findOne({ user_id });
 
-  //   if (!cart) throw createHttpError.NotFound('USER_NOT_FOUND');
+    if (!cart) throw createHttpError.NotFound('USER_NOT_FOUND');
 
-  //   cart.name = data.name ?? cart.name;
-  //   cart.cartname = data.cartname ?? cart.cartname;
-  //   cart.email = data.email ?? cart.email;
-  //   cart.password = data.password ? bcrypt.hashSync(data.password, 12) : cart.password;
-  //   cart.location = data.location ?? cart.location;
+    cart.name = data.name ?? cart.name;
+    cart.cartname = data.cartname ?? cart.cartname;
+    cart.email = data.email ?? cart.email;
+    cart.password = data.password ? bcrypt.hashSync(data.password, 12) : cart.password;
+    cart.location = data.location ?? cart.location;
 
-  //   cart.save();
+    cart.save();
 
-  //   return cart;
-  // };
+    return cart;
+  };
 
-  // delete = async (_id: string) => {
-  //   const cart = await Cart.findById(_id);
+  delete = async (_id: string, type?: string) => {
+    const cart = await Cart.findById(_id);
 
-  //   if (!cart) throw createHttpError.NotFound('USER_NOT_FOUND');
+    if (!cart) throw createHttpError.NotFound('CART_NOT_FOUND');
 
-  //   await Cart.deleteOne({ _id });
+    await Cart.deleteOne({ _id });
 
-  //   return true;
-  // };
+    return true;
+  };
 }
 
 export default new CartService();
