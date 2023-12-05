@@ -4,14 +4,14 @@ import auth from '../app/middleware/auth.middleware';
 
 const router = express.Router();
 
-router.post('/', auth, CartController.create);
+router.post('/', auth, CartController.addCartProduct);
 
 router.get('/', auth, CartController.getAll);
 
 router.get('/:id', auth, CartController.getById);
 
-// router.put('/:id', auth, CartController.update);
+router.put('/:product_id', auth, CartController.decrementCartProduct);
 
-// router.delete('/:id', auth, CartController.delete);
+router.delete('/:product_id', auth, CartController.delete);
 
 export default router;

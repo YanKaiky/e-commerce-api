@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import CartService from '../services/cart.service';
 
 class CartController {
-  async create(request: Request, response: Response) {
+  async addCartProduct(request: Request, response: Response) {
     try {
       const payload = {
         user_id: request.body.user_id,
@@ -10,7 +10,7 @@ class CartController {
         quantity: request.body.quantity,
       };
 
-      const cart = await CartService.create(payload);
+      const cart = await CartService.addCartProduct(payload);
 
       response.status(201).json(cart);
     } catch (error: any) {
@@ -42,16 +42,14 @@ class CartController {
     }
   }
 
-  async update(request: Request, response: Response) {
+  async decrementCartProduct(request: Request, response: Response) {
     try {
-      const id = request.params.id;
-
       const payload = {
         user_id: request.body.user_id,
-        product_id: request.body.product_id,
+        product_id: request.params.product_id,
       };
 
-      const cart = await CartService.update(id, payload);
+      const cart = await CartService.decrementCartProduct(payload);
 
       response.status(200).json(cart);
     } catch (error: any) {
@@ -59,17 +57,17 @@ class CartController {
     }
   }
 
-  // async delete(request: Request, response: Response) {
-  //   try {
-  //     const id = request.params.id;
+  async delete(request: Request, response: Response) {
+    try {
+      const product_id = request.params.product_id;
 
-  //     const cart = await CartService.delete(id);
+      const cart = await CartService.delete(product_id);
 
-  //     response.status(200).json(cart);
-  //   } catch (error: any) {
-  //     response.json({ message: error.message });
-  //   }
-  // }
+      response.status(200).json(cart);
+    } catch (error: any) {
+      response.json({ message: error.message });
+    }
+  }
 }
 
 export default new CartController();

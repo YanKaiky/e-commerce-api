@@ -1,7 +1,5 @@
 import createHttpError from 'http-errors';
 import Cart from '../models/cart';
-import * as bcrypt from 'bcryptjs';
-import 'dotenv/config';
 import { ObjectId } from 'mongoose';
 
 interface ICreateDataUser {
@@ -16,7 +14,7 @@ interface IUpdateDataUser {
 }
 
 class CartService {
-  create = async (data: ICreateDataUser) => {
+  addCartProduct = async (data: ICreateDataUser) => {
     const userCart = await Cart.findOne({ user_id: data.user_id });
 
     const product_id: ObjectId | any = data.product_id;
@@ -66,28 +64,36 @@ class CartService {
     return cart;
   };
 
-  update = async (user_id: string, data: IUpdateDataUser) => {
-    const cart = await Cart.findOne({ user_id });
+  decrementCartProduct = async (data: IUpdateDataUser) => {
+    const cart = await Cart.findOne({ user_id: data.user_id });
 
-    if (!cart) throw createHttpError.NotFound('USER_NOT_FOUND');
+    if (!cart) throw createHttpError.NotFound('CART_NOT_FOUND');
 
-    cart.name = data.name ?? cart.name;
-    cart.cartname = data.cartname ?? cart.cartname;
-    cart.email = data.email ?? cart.email;
-    cart.password = data.password ? bcrypt.hashSync(data.password, 12) : cart.password;
-    cart.location = data.location ?? cart.location;
+    const existingProduct = cart.products.find((pdct) => pdct.product_id?.toString() === data.product_id);
 
-    cart.save();
+    if (!existingProduct) throw createHttpError.NotFound('PRODUCT_NOT_FOUND');
+
+    if (existingProduct.quantity === 1) {
+      cart.products = cart.products.filter((pdct) => pdct.product_id?.toString() !== data.product_id);
+    } else if (existingProduct.quantity === 0) {
+      await Cart.updateOne({ user_id: data.user_id }, { $pull: { products: data.product_id } })
+    } else {
+      existingProduct.quantity -= 1;
+    }
+
+    await cart.save();
 
     return cart;
   };
 
-  delete = async (_id: string, type?: string) => {
-    const cart = await Cart.findById(_id);
+  delete = async (product_id: string) => {
+    const cart = await Cart.findOneAndUpdate(
+      { product_id },
+      { $pull: { products: { product_id } } },
+      { new: true },
+    );
 
-    if (!cart) throw createHttpError.NotFound('CART_NOT_FOUND');
-
-    await Cart.deleteOne({ _id });
+    if (!cart) throw createHttpError.NotFound('PRODUCT_NOT_FOUND');
 
     return true;
   };
