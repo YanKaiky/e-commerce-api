@@ -12,7 +12,7 @@ interface IAuthData {
 class AuthService {
     async login({ email, password }: IAuthData) {
         const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET!;
-        
+
         const user = await Users.findOne({ email });
 
         if (!user) throw createHttpError.NotFound('EMAIL_ADDRESS_OR_PASSWORD_INCORRENT');

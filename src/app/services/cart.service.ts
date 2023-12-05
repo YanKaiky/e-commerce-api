@@ -66,7 +66,7 @@ class CartService {
 
   decrementCartProduct = async (data: IUpdateDataUser) => {
     const cart = await Cart.findOne({ user_id: data.user_id });
-
+    
     if (!cart) throw createHttpError.NotFound('CART_NOT_FOUND');
 
     const existingProduct = cart.products.find((pdct) => pdct.product_id?.toString() === data.product_id);

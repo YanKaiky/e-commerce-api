@@ -29,13 +29,13 @@ class UsersService {
   };
 
   getAll = async () => {
-    const users = await Users.find().sort({ new: -1, timestamp: -1 });
+    const users = await Users.find().sort({ new: -1, timestamp: -1 }).select('-password');;
 
     return users;
   };
 
   getById = async (_id: string) => {
-    const user = await Users.findById(_id);
+    const user = await Users.findById(_id, { password: 0 });
 
     if (!user) throw createHttpError.NotFound('USER_NOT_FOUND');
 
@@ -43,7 +43,7 @@ class UsersService {
   };
 
   update = async (_id: string, data: IUpdateDataUser) => {
-    const user = await Users.findById(_id);
+    const user = await Users.findById(_id, { password: 0 });
 
     if (!user) throw createHttpError.NotFound('USER_NOT_FOUND');
 
