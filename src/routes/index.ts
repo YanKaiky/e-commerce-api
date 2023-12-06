@@ -2,6 +2,7 @@ import { Router } from 'express';
 import auth from './auth';
 import cart from './cart';
 import products from './products';
+import orders from './orders';
 import users from './users';
 
 const router = Router();
@@ -15,5 +16,7 @@ router.use('/cart', cart);
 router.use('/users', users);
 
 router.use('/products', products);
+
+router.use('/orders', orders);
 
 export { router };

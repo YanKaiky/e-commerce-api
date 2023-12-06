@@ -44,7 +44,7 @@ class CartService {
     }
   };
 
-  getAll = async (user_id?: string) => {
+  getAll = async (user_id: string) => {
     const cart = await Cart.find({ user_id }).populate('products.product_id', '_id title supplier image__url').sort({ new: -1, timestamp: -1 });
 
     return cart;
