@@ -45,28 +45,14 @@ class CartService {
   };
 
   getAll = async (user_id?: string) => {
-    let cart = [];
-
-    if (user_id) {
-      cart = await Cart.find({ user_id }).populate('products.product_id', '_id title supplier image__url').sort({ new: -1, timestamp: -1 });
-    } else {
-      cart = await Cart.find().sort({ new: -1, timestamp: -1 });
-    }
-
-    return cart;
-  };
-
-  getById = async (_id: string) => {
-    const cart = await Cart.findById(_id).populate('products.product_id', '_id title supplier image__url');
-
-    if (!cart) throw createHttpError.NotFound('CART_NOT_FOUND');
+    const cart = await Cart.find({ user_id }).populate('products.product_id', '_id title supplier image__url').sort({ new: -1, timestamp: -1 });
 
     return cart;
   };
 
   decrementCartProduct = async (data: IUpdateDataUser) => {
     const cart = await Cart.findOne({ user_id: data.user_id });
-    
+
     if (!cart) throw createHttpError.NotFound('CART_NOT_FOUND');
 
     const existingProduct = cart.products.find((pdct) => pdct.product_id?.toString() === data.product_id);
@@ -88,8 +74,8 @@ class CartService {
 
   delete = async (product_id: string) => {
     const cart = await Cart.findOneAndUpdate(
-      { product_id },
-      { $pull: { products: { product_id } } },
+      { 'products._id': product_id },
+      { $pull: { products: { _id: product_id } } },
       { new: true },
     );
 
