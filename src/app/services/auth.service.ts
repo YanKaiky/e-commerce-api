@@ -24,7 +24,15 @@ class AuthService {
         if (!checkPassword) throw createHttpError.Unauthorized('EMAIL_ADDRESS_OR_PASSWORD_INCORRENT');
 
         const token = {
-            token: sign({ name: user.name, email: user.email },
+            token: sign({
+                _id: user._id,
+                name: user.name,
+                username: user.username,
+                email: user.email,
+                location: user.location,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt,
+            },
                 ACCESS_TOKEN_SECRET,
                 {
                     subject: user._id.toString(),
