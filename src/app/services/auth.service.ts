@@ -13,17 +13,27 @@ class AuthService {
     async login({ email, password }: IAuthData) {
         const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET!;
 
-        const user = await Users.findOne({ email });
+        const userByEmail = await Users.findOne({ email });
 
-        if (!user) throw createHttpError.NotFound('EMAIL_ADDRESS_OR_PASSWORD_INCORRENT');
+        if (!userByEmail) throw createHttpError.NotFound('EMAIL_ADDRESS_OR_PASSWORD_INCORRENT');
 
-        if (!user.password) throw createHttpError.NotFound('REGISTRATION_NOT_FINALIZED');
+        if (!userByEmail.password) throw createHttpError.NotFound('REGISTRATION_NOT_FINALIZED');
 
-        const checkPassword = bcrypt.compareSync(password, user.password);
+        const checkPassword = bcrypt.compareSync(password, userByEmail.password);
 
         if (!checkPassword) throw createHttpError.Unauthorized('EMAIL_ADDRESS_OR_PASSWORD_INCORRENT');
 
-        const token = {
+        const user = {
+            _id: userByEmail._id,
+            name: userByEmail.name,
+            username: userByEmail.username,
+            email: userByEmail.email,
+            location: userByEmail.location,
+            createdAt: userByEmail.createdAt,
+            updatedAt: userByEmail.updatedAt,
+        };
+
+        const data = {
             token: sign({
                 _id: user._id,
                 name: user.name,
@@ -38,10 +48,11 @@ class AuthService {
                     subject: user._id.toString(),
                     expiresIn: '12h',
                 }
-            )
+            ),
+            user,
         };
 
-        return token;
+        return data;
     }
 }
 

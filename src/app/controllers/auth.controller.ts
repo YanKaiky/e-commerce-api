@@ -12,9 +12,9 @@ class AuthController {
       password: auth[1],
     };
 
-    const token = await AuthService.login(payload);
+    const data = await AuthService.login(payload);
 
-    response.status(200).json(token);
+    response.status(200).json(data);
   };
 }
 
